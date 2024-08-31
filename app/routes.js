@@ -1,0 +1,27 @@
+const express = require('express')
+const logger = require('../logger')
+const {validateToken} = require("./utils")
+const userManager = require('./userManager')
+const orderManager = require('./orderManager')
+const productManager = require('./productManager')
+const app = express()
+
+app.use(express.json())
+app.get("/",  (req, res)=>{return res.send("Request recieved")})
+
+app.get("/user/validateUser", validateToken)
+app.get("/user/:id", validateToken, userManager.getUserbyId)
+app.post("/user/register", userManager.createUser)
+app.put("/user/update/:id", validateToken, userManager.updateUser)
+app.post("/user/token", userManager.getToken)
+app.get("/address/list", validateToken, userManager.getAddress)
+app.post("/address/add", validateToken, userManager.addAddress)
+app.put("/address/:id", validateToken, userManager.updateAddress)
+app.get("/order/list", validateToken, orderManager.getOrder)
+app.post("/order/create", validateToken, orderManager.addOrder)
+app.put("/order/:id", validateToken, orderManager.updateOrder)
+app.put("/product/:id", validateToken, productManager.updateProduct)
+app.get("/product/list", validateToken, productManager.getProduct)
+app.post("/product/add", validateToken, productManager.addProduct)
+
+module.exports = app
